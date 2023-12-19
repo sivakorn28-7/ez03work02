@@ -34,21 +34,21 @@ class MainActivity : AppCompatActivity() {
         val okbt: Button = findViewById(R.id.okbt)
         val clearbt: Button = findViewById(R.id.clearbt)
 
-        fun gpacalculate(grades: List<String>): Double {
-            val gradePoints = mapOf(
-                "A" to 4.0,
-                "B+" to 3.5,
-                "B" to 3.0,
-                "C+" to 2.5,
-                "C" to 2.0,
-                "D+" to 1.5,
-                "D" to 1.0,
-                "F" to 0.0
-            )
-            val totalGradePoints = grades.sumByDouble { gradePoints[it] ?: 0.0 }
-            val gpa = totalGradePoints / grades.size
-            return gpa
-        }
+//        fun gpacalculate(grades: List<String>): Double {
+//            val gradePoints = mapOf(
+//                "A" to 4.0,
+//                "B+" to 3.5,
+//                "B" to 3.0,
+//                "C+" to 2.5,
+//                "C" to 2.0,
+//                "D+" to 1.5,
+//                "D" to 1.0,
+//                "F" to 0.0
+//            )
+//            val totalGradePoints = grades.sumByDouble { gradePoints[it] ?: 0.0 }
+//            val gpa = totalGradePoints / grades.size
+//            return gpa
+//        }
 
         okbt.setOnClickListener{
             var sub1 = sub1.text.toString()
@@ -81,10 +81,7 @@ class MainActivity : AppCompatActivity() {
                     Toast. makeText(applicationContext,"กรุณากรอกให้อยู่ระหว่าง 1 ถึง 3", Toast. LENGTH_SHORT).show()
                 }else if(cr1.toInt() > 3 || cr2.toInt() > 3 || cr3.toInt() > 3 || cr4.toInt() > 3|| cr5.toInt() > 3){
                     Toast. makeText(applicationContext,"กรุณากรอกให้อยู่ระหว่าง 1 ถึง 3", Toast. LENGTH_SHORT).show()
-                }else{
-                    var ccal = cr1.toInt() + cr2.toInt() + cr3.toInt() + cr4.toInt() + cr5.toInt()
-                    crcal.setText(ccal.toString())
-                }
+                }else{ }
             }
 
             if(po1 == "" || po2 == "" || po3 ==""|| po4 ==""|| po5 ==""){
@@ -95,18 +92,44 @@ class MainActivity : AppCompatActivity() {
                         if(po3 == "A" || po3 == "B+" || po3 == "B" || po3 == "C+" ||  po3 == "C" ||  po3 == "D+" ||  po3 == "D" ||  po3 == "F" ){
                             if(po4 == "A" || po4 == "B+" || po4 == "B" || po4 == "C+" ||  po4 == "C" ||  po4 == "D+" ||  po4 == "D" ||  po4 == "F" ){
                                 if(po5 == "A" || po5 == "B+" || po5 == "B" || po5 == "C+" ||  po5 == "C" ||  po5 == "D+" ||  po5 == "D" ||  po5 == "F" ){
-                                    val subjectGrades =  mutableListOf<String>()
 
+                                    //เก็บ grade ไว้ใน list
+                                    val subjectGrades =  mutableListOf<String>()
                                     subjectGrades.add(po1)
                                     subjectGrades.add(po2)
                                     subjectGrades.add(po3)
                                     subjectGrades.add(po4)
                                     subjectGrades.add(po5)
+                                    val gradePoints = mapOf(
+                                        "A" to 4.0,
+                                        "B+" to 3.5,
+                                        "B" to 3.0,
+                                        "C+" to 2.5,
+                                        "C" to 2.0,
+                                        "D+" to 1.5,
+                                        "D" to 1.0,
+                                        "F" to 0.0
+                                    )
+                                    val Glist: List<Double> = subjectGrades.map { gradePoints[it] ?: 0.0 }
 
-                                    val gcal = gpacalculate(subjectGrades)
-                                    gpacal.setText(gcal.toString())
+                                    //เก็บ credit ไว้ใน list
+                                    val subjectcredit = mutableListOf<Int>()
+                                    subjectcredit.add(cr1.toInt())
+                                    subjectcredit.add(cr2.toInt())
+                                    subjectcredit.add(cr3.toInt())
+                                    subjectcredit.add(cr4.toInt())
+                                    subjectcredit.add(cr5.toInt())
+                                    val CList: List<Double> = subjectcredit.map { it.toDouble() }
+                                    val ccal = CList.sum()
+                                    crcal.setText(ccal.toString())
 
-                                }else{
+                                    //คำนวนเกรด
+                                    val Callist1 = Glist.zip(CList) { a, b -> a * b }
+                                    val Callist2 = Callist1.sum()
+                                    val Calfinal = Callist2/ccal
+                                    gpacal.text = String.format("%.2f", Calfinal)
+
+                            }else{
                                     Toast. makeText(applicationContext,"กรุณากรอกเกรดให้ถูกต้อง", Toast. LENGTH_SHORT).show()
                                 }
                             }else{
@@ -136,12 +159,14 @@ class MainActivity : AppCompatActivity() {
             cr3.setText("")
             cr4.setText("")
             cr5.setText("")
+            crcal.setText("")
 
             po1.setText("")
             po2.setText("")
             po3.setText("")
             po4.setText("")
             po5.setText("")
+            gpacal.setText("")
         }
     }
 }
